@@ -31,7 +31,10 @@ const fadeUp: Variants = {
 
 export function Products() {
   return (
-    <section id="products" className="bg-white py-16 text-black md:py-24">
+    <section
+      id="products"
+      className="bg-[#F3F4F2] py-16 text-black md:py-24"
+    >
       <Container>
         <motion.div
           initial="hidden"
@@ -42,7 +45,7 @@ export function Products() {
         >
           <motion.p
             variants={fadeUp}
-            className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-black/45 md:mb-6"
+            className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-[#6F6A4A]/70 md:mb-6"
           >
             {sectionCopy.label}
           </motion.p>
@@ -70,7 +73,7 @@ export function Products() {
               <motion.div
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.55, ease: "easeOut" }}
-                className="group relative aspect-[5/4] overflow-hidden bg-neutral-100 sm:aspect-square"
+                className="group relative aspect-[5/4] overflow-hidden bg-[#E8E4DB] sm:aspect-square"
               >
                 <Image
                   src={product.image}
@@ -81,13 +84,13 @@ export function Products() {
                   onError={() => console.log("IMAGE PATH:", product.image)}
                 />
                 <div
-                  className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10"
+                  className="absolute inset-0 bg-[#4A3524]/0 transition-colors duration-500 group-hover:bg-[#4A3524]/10"
                   aria-hidden="true"
                 />
               </motion.div>
 
               <div className="mt-5 max-w-md sm:mt-6">
-                <p className="mb-3 text-sm font-medium uppercase tracking-[0.22em] text-black/45">
+                <p className="mb-3 text-sm font-medium uppercase tracking-[0.22em] text-[#6F6A4A]/75">
                   {product.notes}
                 </p>
                 <h3 className="text-2xl font-medium md:text-3xl">

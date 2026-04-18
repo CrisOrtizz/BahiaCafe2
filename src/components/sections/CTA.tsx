@@ -7,7 +7,7 @@ import { generateWhatsAppLink } from "@/lib/whatsapp";
 
 export function CTA() {
   return (
-    <section className="bg-white py-24 text-black md:py-32">
+    <section className="organic-surface bg-white py-24 text-black md:py-32">
       <Container>
         <motion.div
           initial="hidden"
@@ -28,7 +28,7 @@ export function CTA() {
             rel="noopener noreferrer"
             whileHover={{ y: -2 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-black/35 bg-transparent px-7 py-3 text-sm font-medium text-black transition-colors duration-300 hover:border-black hover:bg-black hover:text-white"
+            className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-[#5F4A32]/45 bg-transparent px-7 py-3 text-sm font-medium text-black transition-colors duration-300 hover:border-[#201914] hover:bg-[#201914] hover:text-white"
           >
             Hablar por WhatsApp
           </motion.a>

@@ -30,3 +30,25 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.organic-surface {
+  position: relative;
+}
+
+.organic-surface::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.22;
+  background-image:
+    radial-gradient(circle at 18% 24%, rgba(92, 76, 46, 0.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 76% 58%, rgba(62, 78, 51, 0.06) 0 1px, transparent 1px);
+  background-size: 18px 18px, 26px 26px;
+}
+
+.organic-surface > * {
+  position: relative;
+  z-index: 1;
+}

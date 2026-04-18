@@ -57,7 +57,7 @@ export function Origin() {
     <section
       ref={sectionRef}
       id="origin"
-      className="overflow-hidden bg-white py-16 text-black md:py-24"
+      className="overflow-hidden bg-[#EFE8DC] py-16 text-black md:py-24"
     >
       <Container>
         <div className="grid items-center gap-10 md:gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
@@ -89,17 +89,17 @@ export function Origin() {
           >
             <motion.p
               variants={fadeUp}
-              className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-black/45 md:mb-6"
+              className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-[#7B7657]/70 md:mb-6"
             >
               {originContent.label}
             </motion.p>
             <motion.h2
               variants={fadeUp}
-              className="mb-6 text-5xl font-medium leading-[1] md:mb-8 md:text-6xl lg:text-7xl"
+              className="mb-6 text-5xl font-medium leading-[1] text-black md:mb-8 md:text-6xl lg:text-7xl"
             >
               {originContent.title}
             </motion.h2>
-            <div className="space-y-2 text-base leading-7 text-black/68 sm:text-lg sm:leading-8">
+            <div className="space-y-2 text-base leading-7 text-black/70 sm:text-lg sm:leading-8">
               {originContent.lines.map((line, index) => (
                 <motion.p
                   key={line}
