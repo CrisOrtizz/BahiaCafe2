@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import type { Variants } from "framer-motion";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 const preparationContent = {
-  label: "PREPARACIÓN",
+  label: "Preparación",
   title: "Aprende a preparar tu café",
   subtext: "Tres métodos, tres formas de disfrutar el origen.",
 };
@@ -16,7 +15,8 @@ const methods = [
   {
     id: "prensa-francesa",
     name: "Prensa Francesa",
-    description: "Más cuerpo, más intensidad.",
+    description:
+      "Inmersión total durante cuatro minutos. Más cuerpo, más intensidad y toda la textura del grano en la taza.",
     media: {
       type: "video",
       src: "https://res.cloudinary.com/dur2lwfua/video/upload/v1775837897/0409_icr2df.mp4",
@@ -25,7 +25,8 @@ const methods = [
   {
     id: "moka-italiana",
     name: "Moka Italiana",
-    description: "Fuerte, tradicional y con carácter.",
+    description:
+      "Presión de vapor sobre la estufa. Fuerte, tradicional y con carácter: el ritual de las cocinas de siempre.",
     media: {
       type: "image",
       src: "https://images.unsplash.com/photo-1772141614991-eea2a95e770c",
@@ -34,7 +35,8 @@ const methods = [
   {
     id: "chemex",
     name: "Chemex",
-    description: "Limpio, suave y aromático.",
+    description:
+      "Filtrado lento y preciso. Limpio, suave y aromático: ideal para apreciar las notas del origen.",
     media: {
       type: "image",
       src: "https://images.unsplash.com/photo-1637944220531-5f6fd15c1e29",
@@ -44,145 +46,101 @@ const methods = [
 
 type PreparationMethod = (typeof methods)[number];
 
-const stagger: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.14,
-    },
-  },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.72, ease: "easeOut" },
-  },
-};
-
 export function Preparation() {
-  const [selectedMethod, setSelectedMethod] =
-    useState<PreparationMethod>(methods[0]);
+  const [selectedMethod, setSelectedMethod] = useState<PreparationMethod>(
+    methods[0],
+  );
 
   return (
-    <section className="bg-white py-16 text-black md:py-24">
+    <section id="preparation" className="relative bg-background py-20 md:py-32">
       <Container>
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-          variants={stagger}
-        >
-          <div className="mx-auto max-w-3xl text-center">
-            <motion.p
-              variants={fadeUp}
-              className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-[#6F6A4A]/65"
-            >
+        <div className="mx-auto max-w-3xl text-center">
+          <Reveal as="p">
+            <span className="block text-xs font-semibold uppercase tracking-[0.4em] text-gold">
               {preparationContent.label}
-            </motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="text-4xl font-medium leading-tight md:text-5xl lg:text-6xl"
-            >
+            </span>
+          </Reveal>
+          <Reveal as="h2" delay={120}>
+            <span className="mt-6 block font-serif text-4xl leading-[1.08] text-cream md:text-5xl lg:text-6xl">
               {preparationContent.title}
-            </motion.h2>
-            <motion.p
-              variants={fadeUp}
-              className="mx-auto mt-5 max-w-xl text-base leading-7 text-black/62 md:text-lg"
-            >
+            </span>
+          </Reveal>
+          <Reveal as="p" delay={220}>
+            <span className="mx-auto mt-5 block max-w-xl text-base leading-7 text-cream/55 md:text-lg">
               {preparationContent.subtext}
-            </motion.p>
-          </div>
+            </span>
+          </Reveal>
+        </div>
 
-          <motion.div
-            variants={fadeUp}
-            className="relative mx-auto mt-12 aspect-video max-w-5xl overflow-hidden rounded-lg bg-[#F3F4F2] shadow-[0_24px_70px_rgba(45,36,25,0.12)] md:mt-16"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedMethod.id}
-                initial={{ opacity: 0, scale: 1.01 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.995 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                className="absolute inset-0"
-              >
-                {selectedMethod.media.type === "video" ? (
-                  <video
-                    aria-label={`Video de ${selectedMethod.name}`}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-cover brightness-[0.82] contrast-[1.06] sepia-[0.06]"
-                  >
-                    <source src={selectedMethod.media.src} type="video/mp4" />
-                  </video>
-                ) : (
-                  <Image
-                    src={selectedMethod.media.src}
-                    alt={selectedMethod.name}
-                    fill
-                    sizes="(min-width: 1024px) 80vw, 100vw"
-                    className="object-cover brightness-[0.86] contrast-[1.06] sepia-[0.05]"
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-black/28 via-black/5 to-white/5"
-              aria-hidden="true"
-            />
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3 md:gap-8"
+        {/* Tabs de métodos */}
+        <Reveal delay={300}>
+          <div
+            role="tablist"
+            aria-label="Métodos de preparación"
+            className="mt-12 flex flex-wrap items-center justify-center gap-3 md:gap-4"
           >
             {methods.map((method) => {
               const isSelected = method.id === selectedMethod.id;
-
               return (
-                <motion.button
+                <button
                   key={method.id}
                   type="button"
-                  variants={fadeUp}
+                  role="tab"
+                  aria-selected={isSelected}
                   onClick={() => setSelectedMethod(method)}
-                  className="group text-left"
-                  aria-pressed={isSelected}
+                  className={`rounded-full border px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
+                    isSelected
+                      ? "border-gold bg-gold text-background"
+                      : "border-cream/15 text-cream/60 hover:border-gold/50 hover:text-cream"
+                  }`}
                 >
-                  <span className="block pb-5">
-                    <span
-                      className={`block text-xl font-medium transition-colors md:text-2xl ${
-                        isSelected ? "text-black" : "text-black/58"
-                      }`}
-                    >
-                      {method.name}
-                    </span>
-                    <span
-                      className={`mt-3 block text-base leading-7 transition-colors ${
-                        isSelected ? "text-black/68" : "text-black/48"
-                      }`}
-                    >
-                      {method.description}
-                    </span>
-                  </span>
-                  <span
-                    className={`block h-px origin-left transition-all duration-300 ${
-                      isSelected
-                        ? "w-16 bg-[#6F6A4A]"
-                        : "w-8 bg-black/18 group-hover:w-12 group-hover:bg-black/35"
-                    }`}
-                    aria-hidden="true"
-                  />
-                </motion.button>
+                  {method.name}
+                </button>
               );
             })}
-          </motion.div>
-        </motion.div>
+          </div>
+        </Reveal>
+
+        {/* Media del método activo */}
+        <Reveal delay={380}>
+          <div className="relative mx-auto mt-10 aspect-video max-w-5xl overflow-hidden rounded-2xl border border-cream/8 bg-surface shadow-[0_40px_90px_-20px_rgba(0,0,0,0.6)] md:mt-12">
+            {selectedMethod.media.type === "video" ? (
+              <video
+                key={selectedMethod.id}
+                aria-label={`Video de ${selectedMethod.name}`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                className="h-full w-full object-cover brightness-[0.85] contrast-[1.06] sepia-[0.06]"
+              >
+                <source src={selectedMethod.media.src} type="video/mp4" />
+              </video>
+            ) : (
+              <Image
+                key={selectedMethod.id}
+                src={selectedMethod.media.src}
+                alt={selectedMethod.name}
+                fill
+                sizes="(min-width: 1024px) 80vw, 100vw"
+                className="object-cover brightness-[0.88] contrast-[1.06] sepia-[0.05]"
+              />
+            )}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-transparent"
+              aria-hidden="true"
+            />
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+              <h3 className="font-serif text-2xl text-cream md:text-3xl">
+                {selectedMethod.name}
+              </h3>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-cream/70 md:text-base">
+                {selectedMethod.description}
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );

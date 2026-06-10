@@ -1,65 +1,40 @@
-"use client";
-
-import { motion } from "framer-motion";
-import type { Variants } from "framer-motion";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 const manifestoLines = [
-  "No es solo café.",
-  "Es origen, proceso y cultura.",
-  "Desde las montañas de Tolima",
-  "hasta las tazas en la costa.",
+  { text: "No es solo café.", accent: false },
+  { text: "Es origen, proceso y cultura.", accent: true },
+  { text: "Desde las montañas de Tolima", accent: false },
+  { text: "hasta las tazas en la costa.", accent: false },
 ];
 
-const lineStagger: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.16,
-    },
-  },
-};
-
-const lineReveal: Variants = {
-  hidden: { opacity: 0, y: 34 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.78, ease: "easeOut" },
-  },
-};
-
 const lineStyles = [
-  "text-5xl font-semibold leading-[0.98] sm:text-6xl md:text-7xl lg:text-8xl",
-  "mt-4 text-4xl font-semibold leading-[1.02] text-black/90 sm:text-5xl md:text-6xl lg:text-7xl",
-  "mt-12 text-2xl font-normal leading-[1.18] text-black/58 sm:text-3xl md:mt-14 md:text-4xl",
-  "mt-3 text-2xl font-normal leading-[1.18] text-black/58 sm:text-3xl md:text-4xl",
+  "font-serif text-5xl leading-[1.02] text-cream sm:text-6xl md:text-7xl lg:text-8xl",
+  "mt-4 font-serif text-4xl italic leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl",
+  "mt-12 text-2xl font-light leading-[1.25] text-cream/55 sm:text-3xl md:mt-14 md:text-4xl",
+  "mt-3 text-2xl font-light leading-[1.25] text-cream/55 sm:text-3xl md:text-4xl",
 ];
 
 export function Manifesto() {
   return (
-    <section
-      id="manifesto"
-      className="organic-surface bg-white py-16 text-black md:py-24"
-    >
+    <section id="manifesto" className="relative bg-background py-20 md:py-32">
       <Container>
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={lineStagger}
-          className="max-w-3xl"
-        >
+        <div className="max-w-4xl">
           {manifestoLines.map((line, index) => (
-            <motion.p
-              key={line}
-              variants={lineReveal}
-              className={lineStyles[index]}
-            >
-              {line}
-            </motion.p>
+            <Reveal key={line.text} as="p" delay={index * 130}>
+              <span
+                className={`block ${lineStyles[index]} ${
+                  line.accent ? "text-gold" : ""
+                }`}
+              >
+                {line.text}
+              </span>
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
+        <Reveal delay={520}>
+          <div className="gold-divider mt-20 md:mt-28" aria-hidden="true" />
+        </Reveal>
       </Container>
     </section>
   );

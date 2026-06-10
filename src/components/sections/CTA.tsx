@@ -1,38 +1,45 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
-import { fadeUp } from "@/lib/animations";
+import { Reveal } from "@/components/ui/Reveal";
 import { generateWhatsAppLink } from "@/lib/whatsapp";
 
 export function CTA() {
   return (
-    <section className="organic-surface bg-white py-24 text-black md:py-32">
-      <Container>
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.35 }}
-          variants={fadeUp}
-          className="mx-auto flex max-w-3xl flex-col items-center text-center"
-        >
-          <h2 className="text-4xl font-medium leading-tight md:text-5xl lg:text-6xl">
-            ¿Listo para probar café de origen?
-          </h2>
-          <p className="mt-5 max-w-xl text-base leading-7 text-black/62 md:text-lg">
-            Escríbenos y te ayudamos a elegir la mejor opción.
-          </p>
-          <motion.a
-            href={generateWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ y: -2 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="mt-9 inline-flex min-h-12 items-center justify-center rounded-full border border-[#5F4A32]/45 bg-transparent px-7 py-3 text-sm font-medium text-black transition-colors duration-300 hover:border-[#201914] hover:bg-[#201914] hover:text-white"
-          >
-            Hablar por WhatsApp
-          </motion.a>
-        </motion.div>
+    <section className="relative overflow-hidden bg-background py-24 md:py-36">
+      {/* Resplandor dorado sutil de fondo */}
+      <div
+        className="absolute left-1/2 top-1/2 h-[480px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(200,151,74,0.12),transparent_65%)]"
+        aria-hidden="true"
+      />
+
+      <Container className="relative">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <Reveal as="p">
+            <span className="block text-xs font-semibold uppercase tracking-[0.4em] text-gold">
+              Pedidos
+            </span>
+          </Reveal>
+          <Reveal as="h2" delay={120}>
+            <span className="mt-6 block font-serif text-4xl leading-[1.1] text-cream md:text-5xl lg:text-6xl">
+              ¿Listo para probar café de origen?
+            </span>
+          </Reveal>
+          <Reveal as="p" delay={220}>
+            <span className="mt-6 block max-w-xl text-base leading-7 text-cream/55 md:text-lg">
+              Escríbenos y te ayudamos a elegir la mejor opción para tu ritual
+              de café.
+            </span>
+          </Reveal>
+          <Reveal delay={320}>
+            <a
+              href={generateWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-flex min-h-13 items-center justify-center rounded-full bg-gold px-9 py-3.5 text-sm font-semibold uppercase tracking-[0.16em] text-background transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_-12px_rgba(200,151,74,0.5)]"
+            >
+              Hablar por WhatsApp
+            </a>
+          </Reveal>
+        </div>
       </Container>
     </section>
   );

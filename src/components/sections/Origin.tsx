@@ -1,116 +1,105 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-import type { Variants } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 const originContent = {
-  label: "ORIGEN",
+  label: "Origen",
+  quote: "Desde las montañas de Tolima",
   title: "Líbano, Tolima",
   lines: [
-    "Nuestro café nace en las montañas de Tolima.",
-    "Cultivado por manos expertas,",
-    "respetando cada etapa del proceso.",
+    "Nuestro café nace a más de 1.500 metros sobre el nivel del mar, donde la niebla y el sol se turnan el día.",
+    "Cultivado por manos expertas que respetan cada etapa del proceso: la siembra, la recolección, el secado y el tueste.",
     "Cada taza cuenta esa historia.",
   ],
 };
 
-const textStagger: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.14,
-      delayChildren: 0.18,
-    },
-  },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 26 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.72, ease: "easeOut" },
-  },
-};
-
-const imageReveal: Variants = {
-  hidden: { opacity: 0, scale: 1.04 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.8, ease: "easeOut" },
-  },
-};
-
 export function Origin() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  // Parallax suave con scroll nativo, sin librerías externas.
+  useEffect(() => {
+    const node = parallaxRef.current;
+    if (!node) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    const update = () => {
+      const rect = node.getBoundingClientRect();
+      const progress =
+        (rect.top + rect.height / 2 - window.innerHeight / 2) /
+        window.innerHeight;
+      node.style.transform = `translateY(${progress * -30}px) scale(1.1)`;
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
     <section
-      ref={sectionRef}
       id="origin"
-      className="overflow-hidden bg-[#EFE8DC] py-16 text-black md:py-24"
+      className="relative overflow-hidden bg-background py-20 md:py-32"
     >
       <Container>
-        <div className="grid items-center gap-10 md:gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.25 }}
-            variants={imageReveal}
-            className="relative h-[380px] overflow-hidden sm:h-[460px] md:h-[520px] lg:h-[62vh]"
-          >
-            <motion.div style={{ y: imageY }} className="absolute inset-0">
-              <Image
-                src="/images/libano-tolima-generada.png"
-                alt="Paisaje cafetero en Líbano, Tolima"
-                fill
-                sizes="(min-width: 1024px) 58vw, 100vw"
-                className="scale-105 object-cover"
-                priority={false}
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          {/* Imagen izquierda con parallax y sombra cálida */}
+          <Reveal>
+            <div className="relative h-[400px] overflow-hidden rounded-[2rem] shadow-[0_40px_90px_-20px_rgba(200,151,74,0.18)] sm:h-[480px] md:h-[540px] lg:h-[64vh]">
+              <div ref={parallaxRef} className="absolute inset-0 will-change-transform">
+                <Image
+                  src="/images/libano-tolima-generada.png"
+                  alt="Paisaje cafetero en Líbano, Tolima"
+                  fill
+                  sizes="(min-width: 1024px) 52vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div
+                className="absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-gold/15"
+                aria-hidden="true"
               />
-            </motion.div>
-          </motion.div>
+            </div>
+          </Reveal>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.35 }}
-            variants={textStagger}
-            className="max-w-lg lg:pt-12"
-          >
-            <motion.p
-              variants={fadeUp}
-              className="mb-5 text-xs font-semibold uppercase tracking-[0.34em] text-[#7B7657]/70 md:mb-6"
-            >
-              {originContent.label}
-            </motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="mb-6 text-5xl font-medium leading-[1] text-black md:mb-8 md:text-6xl lg:text-7xl"
-            >
-              {originContent.title}
-            </motion.h2>
-            <div className="space-y-2 text-base leading-7 text-black/70 sm:text-lg sm:leading-8">
+          {/* Texto derecha */}
+          <div className="max-w-xl">
+            <Reveal as="p" delay={80}>
+              <span className="block text-xs font-semibold uppercase tracking-[0.4em] text-gold">
+                {originContent.label}
+              </span>
+            </Reveal>
+
+            <Reveal delay={180}>
+              <blockquote className="mt-7 border-l-2 border-gold/50 pl-6 font-serif text-3xl italic leading-snug text-cream sm:text-4xl md:text-5xl">
+                &ldquo;{originContent.quote}&rdquo;
+              </blockquote>
+            </Reveal>
+
+            <Reveal as="h2" delay={280}>
+              <span className="mt-9 block font-serif text-2xl text-gold/90 sm:text-3xl">
+                {originContent.title}
+              </span>
+            </Reveal>
+
+            <div className="mt-6 space-y-5 text-base leading-8 text-cream/65 sm:text-lg">
               {originContent.lines.map((line, index) => (
-                <motion.p
-                  key={line}
-                  variants={fadeUp}
-                  className={index === 3 ? "pt-5" : ""}
-                >
+                <Reveal key={line} as="p" delay={360 + index * 110}>
                   {line}
-                </motion.p>
+                </Reveal>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </Container>
     </section>
