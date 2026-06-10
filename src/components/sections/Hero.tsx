@@ -47,13 +47,13 @@ export function Hero() {
         </p>
         <h1
           style={riseDelay(0.4)}
-          className="hero-rise font-serif text-5xl leading-[1.04] text-cream sm:text-6xl md:text-7xl lg:text-8xl"
+          className="hero-rise heading-hero leading-[1.04] text-cream"
         >
           {heroContent.heading}
         </h1>
         <p
           style={riseDelay(0.62)}
-          className="hero-rise mt-7 font-serif text-xl italic text-cream/75 sm:text-2xl md:text-3xl"
+          className="hero-rise mt-7 font-display text-xl font-medium text-cream/75 sm:text-2xl md:text-3xl"
         >
           {heroContent.subtext}
         </p>

@@ -36,7 +36,7 @@ export function Navbar() {
         <Link
           href="/"
           onClick={() => setMenuOpen(false)}
-          className="shrink-0 font-serif text-lg tracking-wide text-cream transition-colors hover:text-gold md:text-xl"
+          className="shrink-0 font-display text-lg tracking-wide text-cream transition-colors hover:text-gold md:text-xl"
         >
           {brand.name}
         </Link>
@@ -104,7 +104,7 @@ export function Navbar() {
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
                 style={{ transitionDelay: menuOpen ? `${index * 60}ms` : "0ms" }}
-                className={`font-serif text-4xl text-cream transition-all duration-500 hover:text-gold ${
+                className={`font-display text-4xl text-cream transition-all duration-500 hover:text-gold ${
                   menuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
               >

@@ -81,13 +81,13 @@ export function Origin() {
             </Reveal>
 
             <Reveal delay={180}>
-              <blockquote className="mt-7 border-l-2 border-gold/50 pl-6 font-serif text-3xl italic leading-snug text-cream sm:text-4xl md:text-5xl">
+              <blockquote className="heading-section mt-7 border-l-2 border-gold/50 pl-6 leading-snug text-cream">
                 &ldquo;{originContent.quote}&rdquo;
               </blockquote>
             </Reveal>
 
             <Reveal as="h2" delay={280}>
-              <span className="mt-9 block font-serif text-2xl text-gold/90 sm:text-3xl">
+              <span className="mt-9 block font-display text-2xl text-gold/90 sm:text-3xl">
                 {originContent.title}
               </span>
             </Reveal>

@@ -15,7 +15,7 @@
   --color-gold: var(--gold);
   --color-amber: var(--amber);
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
+  --font-display: var(--font-syne);
 }
 
 /* En @layer base para que las utilities de Tailwind (capa posterior) puedan
@@ -45,6 +45,17 @@
     background: color-mix(in srgb, var(--gold) 35%, transparent);
     color: var(--foreground);
   }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-syne), sans-serif;
+  }
+
+  /* H3 de cards */
+  h3 {
+    font-weight: 500;
+  }
 }
 
 /* Grain texture sutil sobre toda la página */
@@ -57,6 +68,25 @@ body::after {
   opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
+}
+
+/* Headings en Syne */
+.heading-hero {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.heading-section {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 600;
+}
+
+/* Peso 800 de Syne reservado para palabras de acento */
+.heading-accent {
+  font-weight: 800;
 }
 
 /* Línea divisora con gradiente dorado que se desvanece */
@@ -116,6 +146,37 @@ body::after {
   animation: scroll-hint 1.8s ease-in-out infinite;
 }
 
+/* Micro pulse del card del carrusel al "aterrizar" (tras la transición de 0.7s) */
+@keyframes card-pulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card-pulse {
+  animation: card-pulse 300ms ease-out 700ms both;
+}
+
+/* Resplandor del carrusel: respira con cada cambio de card (0.7s) */
+@keyframes glow-breathe {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.glow-breathe {
+  animation: glow-breathe 0.7s ease both;
+}
+
 /* Cursor personalizado — solo dispositivos con puntero fino */
 .cursor-dot {
   position: fixed;
@@ -152,7 +213,8 @@ body::after {
     animation: none;
   }
 
-  .scroll-hint {
+  .scroll-hint,
+  .card-pulse {
     animation: none;
   }
 

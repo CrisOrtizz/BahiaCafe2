@@ -37,7 +37,7 @@ export function Combos() {
             </span>
           </Reveal>
           <Reveal as="h2" delay={120}>
-            <span className="mt-6 block font-serif text-4xl leading-[1.08] text-cream md:text-5xl lg:text-6xl">
+            <span className="heading-section mt-6 block leading-[1.12] text-cream">
               Selecciones para cada ritual.
             </span>
           </Reveal>
@@ -65,7 +65,7 @@ export function Combos() {
                   <p className="text-[0.68rem] font-medium uppercase tracking-[0.22em] text-gold/80">
                     {combo.note}
                   </p>
-                  <h3 className="mt-3 font-serif text-2xl text-cream">
+                  <h3 className="mt-3 font-display text-2xl text-cream">
                     {combo.title}
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-cream/55">

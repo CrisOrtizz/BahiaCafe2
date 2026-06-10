@@ -44,7 +44,7 @@ export function Footer() {
       <Container className="flex flex-col items-center py-16 text-center md:py-20">
         <Link
           href="/"
-          className="font-serif text-3xl text-cream transition-colors hover:text-gold md:text-4xl"
+          className="font-display text-3xl text-cream transition-colors hover:text-gold md:text-4xl"
         >
           {brand.name}
         </Link>

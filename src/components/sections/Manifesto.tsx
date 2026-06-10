@@ -9,8 +9,8 @@ const manifestoLines = [
 ];
 
 const lineStyles = [
-  "font-serif text-5xl leading-[1.02] text-cream sm:text-6xl md:text-7xl lg:text-8xl",
-  "mt-4 font-serif text-4xl italic leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl",
+  "font-display text-5xl leading-[1.02] text-cream sm:text-6xl md:text-7xl lg:text-8xl",
+  "heading-accent mt-4 font-display text-4xl leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl",
   "mt-12 text-2xl font-light leading-[1.25] text-cream/55 sm:text-3xl md:mt-14 md:text-4xl",
   "mt-3 text-2xl font-light leading-[1.25] text-cream/55 sm:text-3xl md:text-4xl",
 ];

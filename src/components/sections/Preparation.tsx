@@ -61,7 +61,7 @@ export function Preparation() {
             </span>
           </Reveal>
           <Reveal as="h2" delay={120}>
-            <span className="mt-6 block font-serif text-4xl leading-[1.08] text-cream md:text-5xl lg:text-6xl">
+            <span className="heading-section mt-6 block leading-[1.12] text-cream">
               {preparationContent.title}
             </span>
           </Reveal>
@@ -132,7 +132,7 @@ export function Preparation() {
               aria-hidden="true"
             />
             <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-              <h3 className="font-serif text-2xl text-cream md:text-3xl">
+              <h3 className="font-display text-2xl text-cream md:text-3xl">
                 {selectedMethod.name}
               </h3>
               <p className="mt-2 max-w-xl text-sm leading-6 text-cream/70 md:text-base">
