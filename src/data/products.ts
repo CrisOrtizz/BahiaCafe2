@@ -24,4 +24,20 @@ export const products: Product[] = [
     description: "El mismo perfil que amas, en formato para no quedarse corto.",
     image: "/images/mozzura500.jpg",
   },
+  {
+    id: "mozzura-honey-250",
+    name: "Mozzura Honey 250g",
+    price: "$34.000 COP",
+    notes: ["Miel", "Durazno", "Caramelo"],
+    description: "Proceso honey que intensifica la dulzura natural del grano.",
+    image: "/images/mozzura250.jpg",
+  },
+  {
+    id: "mozzura-honey-500",
+    name: "Mozzura Honey 500g",
+    price: "$48.000 COP",
+    notes: ["Miel", "Durazno", "Caramelo", "Floral"],
+    description: "Perfil honey en su expresión más amplia. Para quienes exigen más.",
+    image: "/images/mozzura500.jpg",
+  },
 ];

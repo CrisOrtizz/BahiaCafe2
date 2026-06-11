@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useRef, useEffect, useState, useCallback } from "react";
 import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { products, type Product } from "@/data/products";
@@ -18,85 +19,94 @@ const sectionCopy = {
   title: "Cafés para beber con calma.",
 };
 
-const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
-const SWIPE_THRESHOLD = 48;
-const WHEEL_DEBOUNCE_MS = 600;
+const CARD_GAP = 28;
+// Spring que da la sensación de peso e inercia tipo Apple/Linear.
+const SPRING = { stiffness: 55, damping: 22, mass: 0.9 };
+// Tarjeta inicial centrada: Mozzura Clásico 500g (índice 1).
+const INITIAL_INDEX = 1;
 
-/* Coverflow en tres niveles de profundidad: el card activo se acerca con
-   translateZ(80px), los vecinos retroceden y rotan, los lejanos se hunden más. */
-function coverflowStyle(offset: number, isEntering: boolean): CSSProperties {
-  const distance = Math.abs(offset);
-  const side = Math.sign(offset);
-
-  let transform: string;
-  let opacity: number;
-  if (distance === 0) {
-    transform = "translateX(-50%) translateZ(80px) rotateY(0deg) scale(1)";
-    opacity = 1;
-  } else if (distance === 1) {
-    transform = `translateX(calc(-50% + ${side * 55}%)) translateZ(-40px) rotateY(${side * -45}deg) scale(0.82)`;
-    opacity = 0.5;
-  } else if (distance === 2) {
-    transform = `translateX(calc(-50% + ${side * 92}%)) translateZ(-90px) rotateY(${side * -70}deg) scale(0.65)`;
-    opacity = 0.25;
-  } else {
-    transform = `translateX(calc(-50% + ${side * 120}%)) translateZ(-120px) rotateY(${side * -70}deg) scale(0.5)`;
-    opacity = 0;
-  }
-
-  return {
-    transform,
-    opacity,
-    zIndex: 30 - distance * 10,
-    transition: `all 0.7s ${EASE}`,
-    // El card que entra llega 0.05s después: cambio escalonado.
-    transitionDelay: isEntering ? "0.05s" : "0s",
-  };
-}
+// ─── Tarjeta individual ───────────────────────────────────────────────────────
 
 function ProductCard({
   product,
-  isActive,
-  pulse,
+  index,
+  trackX,
+  cardWidth,
+  trackOffsetRef,
 }: {
   product: Product;
-  isActive: boolean;
-  pulse: boolean;
+  index: number;
+  trackX: MotionValue<number>;
+  cardWidth: number;
+  trackOffsetRef: { current: number };
 }) {
+  // Centro del card dentro del track (constante por card).
+  const cardCenter = index * (cardWidth + CARD_GAP) + cardWidth / 2;
+
+  // Distancia al centro visual del viewport — recalculada cada frame via spring.
+  const distFromCenter = useTransform(trackX, (x) =>
+    Math.abs(trackOffsetRef.current + cardCenter + x),
+  );
+
+  // Efectos visuales continuos: sin estados discretos, todo es gradiente.
+  const scale = useTransform(distFromCenter, [0, 340], [1, 0.84], {
+    clamp: true,
+  });
+  const opacity = useTransform(distFromCenter, [0, 380], [1, 0.36], {
+    clamp: true,
+  });
+  const brightness = useTransform(distFromCenter, [0, 300], [1.08, 0.8], {
+    clamp: true,
+  });
+  const filter = useTransform(brightness, (b) => `brightness(${b})`);
+  const zIndex = useTransform(distFromCenter, (d) =>
+    Math.round(100 - d * 0.25),
+  );
+  const shadowAlpha = useTransform(distFromCenter, [0, 200], [0.22, 0], {
+    clamp: true,
+  });
+  const boxShadow = useTransform(
+    shadowAlpha,
+    (a) => `0 32px 80px rgba(200, 151, 74, ${a.toFixed(3)})`,
+  );
+  const borderAlpha = useTransform(distFromCenter, [0, 200], [0.42, 0.07], {
+    clamp: true,
+  });
+  const borderColor = useTransform(
+    borderAlpha,
+    (a) => `rgba(200, 151, 74, ${a.toFixed(3)})`,
+  );
+
   return (
-    <div
-      className={`overflow-hidden rounded-[20px] border bg-surface ${
-        pulse ? "card-pulse" : ""
-      } ${isActive ? "border-gold/40" : "border-cream/8"}`}
+    <motion.div
+      className="flex-none overflow-hidden rounded-[20px] bg-surface"
       style={{
-        transition: `box-shadow 0.7s ${EASE}, border-color 0.7s ${EASE}`,
-        boxShadow: isActive ? "0 30px 80px rgba(200, 151, 74, 0.15)" : "none",
+        width: cardWidth,
+        scale,
+        opacity,
+        zIndex,
+        filter,
+        boxShadow,
+        border: "1px solid",
+        borderColor,
       }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
         <Image
           src={product.image}
           alt={product.name}
           fill
-          sizes="(min-width: 640px) 420px, 80vw"
+          sizes="(min-width: 640px) 340px, 80vw"
           draggable={false}
-          className={`object-cover transition-transform duration-700 ease-out ${
-            isActive ? "scale-105" : "scale-100"
-          }`}
+          className="object-cover"
         />
         <div
           className="absolute inset-0 bg-gradient-to-t from-surface/85 via-transparent to-transparent"
-          aria-hidden="true"
+          aria-hidden
         />
       </div>
 
-      {/* Info visible solo en el card central */}
-      <div
-        className={`p-6 transition-opacity duration-500 sm:p-7 ${
-          isActive ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        aria-hidden={!isActive}
-      >
+      <div className="p-6 sm:p-7">
         <ul className="flex flex-wrap gap-2" aria-label="Notas de sabor">
           {product.notes.map((note) => (
             <li
@@ -107,89 +117,108 @@ function ProductCard({
             </li>
           ))}
         </ul>
-
-        <h3 className="mt-4 font-display text-2xl font-semibold text-cream md:text-3xl">
+        <h3 className="mt-4 font-display text-2xl font-semibold text-cream">
           {product.name}
         </h3>
         <p className="mt-2 text-sm leading-6 text-cream/55">
           {product.description}
         </p>
-        <p className="mt-4 font-display text-3xl font-semibold text-gold md:text-4xl">
+        <p className="mt-4 font-display text-3xl font-semibold text-gold">
           {product.price}
         </p>
-
         <a
           href={generateWhatsAppLink()}
           target="_blank"
           rel="noopener noreferrer"
-          tabIndex={isActive ? 0 : -1}
           className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full border border-gold/45 px-6 text-sm font-medium uppercase tracking-[0.16em] text-gold transition-all duration-300 hover:bg-gold hover:text-background"
         >
           Pedir por WhatsApp
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
+// ─── Galería ──────────────────────────────────────────────────────────────────
+
 export function Products() {
-  const [active, setActive] = useState(0);
-  const [hasNavigated, setHasNavigated] = useState(false);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const activeRef = useRef(0);
-  const wheelLockRef = useRef(false);
-  const touchStartX = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const total = products.length;
+  // Refs de geometría: actualizados en medición, leídos en transforms por frame.
+  const trackOffsetRef = useRef<number>(0); // padding - containerWidth/2
+  const trackXAtZeroRef = useRef<number>(0); // trackX cuando el primer card está centrado
+  const fullRangeRef = useRef<number>(0); // distancia total de recorrido del track
 
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
+  const [cardWidth, setCardWidth] = useState(320);
 
-  const goTo = useCallback(
-    (index: number) => {
-      const clamped = Math.max(0, Math.min(total - 1, index));
-      if (clamped === activeRef.current) return;
-      setActive(clamped);
-      setHasNavigated(true);
-    },
-    [total],
+  // progress ∈ [0, 1]: 0 = primer card centrado, 1 = último card centrado.
+  const initialProgress = INITIAL_INDEX / (products.length - 1);
+  const mouseProgress = useMotionValue(initialProgress);
+  const smoothProgress = useSpring(mouseProgress, SPRING);
+
+  // Posición X del track: mapea el progreso al desplazamiento real en píxeles.
+  const trackX = useTransform(
+    smoothProgress,
+    (p) => trackXAtZeroRef.current - p * fullRangeRef.current,
   );
 
-  // Navegación por rueda: encaja card a card con debounce de 600ms.
-  // En los extremos no se hace preventDefault y la página scrollea normal.
+  // Mide el contenedor y actualiza todos los refs de geometría.
+  const measure = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const cw = el.offsetWidth;
+    const padding = cw * 0.1;
+    const newCardWidth = Math.min(340, Math.floor((cw - padding * 2) * 0.76));
+
+    setCardWidth(newCardWidth);
+    // trackOffset = distancia entre el inicio del track y el centro del viewport.
+    trackOffsetRef.current = padding - cw / 2;
+    // Cuando progress=0, el primer card debe estar centrado → trackX positivo.
+    trackXAtZeroRef.current = cw / 2 - padding - newCardWidth / 2;
+    // El recorrido total cubre todos los cards: (N-1) saltos.
+    fullRangeRef.current = (products.length - 1) * (newCardWidth + CARD_GAP);
+  }, []);
+
   useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (containerRef.current) ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [measure]);
 
-    const onWheel = (event: WheelEvent) => {
-      const direction = event.deltaY > 0 ? 1 : -1;
-      const target = activeRef.current + direction;
-      if (target < 0 || target >= total) return;
-      event.preventDefault();
-      if (wheelLockRef.current) return;
-      wheelLockRef.current = true;
-      goTo(target);
-      window.setTimeout(() => {
-        wheelLockRef.current = false;
-      }, WHEEL_DEBOUNCE_MS);
-    };
+  // Mouse: posición horizontal dentro del contenedor → progreso 0–1.
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const p = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      mouseProgress.set(p);
+    },
+    [mouseProgress],
+  );
 
-    stage.addEventListener("wheel", onWheel, { passive: false });
-    return () => stage.removeEventListener("wheel", onWheel);
-  }, [goTo, total]);
+  // Touch: arrastrar horizontalmente controla el progreso.
+  const touchRef = useRef<{ x: number; p: number } | null>(null);
 
-  const onTouchStart = (event: React.TouchEvent) => {
-    touchStartX.current = event.touches[0].clientX;
-  };
+  const onTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      touchRef.current = { x: e.touches[0].clientX, p: mouseProgress.get() };
+    },
+    [mouseProgress],
+  );
 
-  const onTouchEnd = (event: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = event.changedTouches[0].clientX - touchStartX.current;
-    touchStartX.current = null;
-    if (delta <= -SWIPE_THRESHOLD) goTo(activeRef.current + 1);
-    else if (delta >= SWIPE_THRESHOLD) goTo(activeRef.current - 1);
-  };
+  const onTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!touchRef.current) return;
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      // Arrastrar izquierda (dx < 0) → avanzar en la galería (p sube).
+      const dx = e.touches[0].clientX - touchRef.current.x;
+      const newP = Math.max(0, Math.min(1, touchRef.current.p - dx / rect.width));
+      mouseProgress.set(newP);
+    },
+    [mouseProgress],
+  );
 
   return (
     <section
@@ -209,69 +238,41 @@ export function Products() {
             </span>
           </Reveal>
         </div>
+      </Container>
 
-        <Reveal delay={220}>
-          <div
-            ref={stageRef}
-            role="group"
-            aria-roledescription="carrusel"
-            aria-label="Carrusel de productos"
-            className="relative mx-auto w-full max-w-4xl"
-            style={{ perspective: "1200px" }}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
+      <Reveal delay={220}>
+        {/* overflow-hidden recorta los cards laterales; py-14 da espacio al scale */}
+        <div
+          ref={containerRef}
+          className="relative overflow-hidden cursor-none py-14"
+          style={{ paddingInline: "10vw", touchAction: "none" }}
+          onMouseMove={onMouseMove}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+        >
+          <motion.div
+            className="flex items-start"
+            style={{ x: trackX, gap: `${CARD_GAP}px` }}
           >
-            {/* Resplandor radial detrás del card activo */}
-            <div
-              key={`glow-${active}`}
-              aria-hidden="true"
-              className="glow-breathe pointer-events-none absolute -inset-x-20 -inset-y-10"
-              style={{
-                background:
-                  "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(200,151,74,0.04), transparent)",
-              }}
-            />
+            {products.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                trackX={trackX}
+                cardWidth={cardWidth}
+                trackOffsetRef={trackOffsetRef}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </Reveal>
 
-            {/* Card fantasma en flujo normal: fija la altura del escenario */}
-            <div
-              className="invisible mx-auto w-[min(80vw,420px)]"
-              aria-hidden="true"
-            >
-              <ProductCard product={products[0]} isActive pulse={false} />
-            </div>
-
-            {products.map((product, index) => {
-              const offset = index - active;
-              const isActive = offset === 0;
-              return (
-                <div
-                  key={product.id}
-                  onClick={() => !isActive && goTo(index)}
-                  style={coverflowStyle(offset, isActive)}
-                  className={`absolute left-1/2 top-0 w-[min(80vw,420px)] ${
-                    isActive ? "" : "cursor-pointer"
-                  }`}
-                >
-                  <ProductCard
-                    product={product}
-                    isActive={isActive}
-                    pulse={isActive && hasNavigated}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </Reveal>
-
+      <Container>
         <Reveal delay={300}>
-          <div className="mt-10 flex flex-col items-center gap-2">
-            <p className="text-sm tracking-[0.2em] text-cream/50">
-              {active + 1} / {total}
-            </p>
-            <p className="text-[0.65rem] uppercase tracking-[0.28em] text-cream/35">
-              Scroll o desliza para explorar
-            </p>
-          </div>
+          <p className="mt-6 text-center text-[0.65rem] uppercase tracking-[0.28em] text-cream/35">
+            Mueve el cursor para explorar
+          </p>
         </Reveal>
       </Container>
     </section>
