@@ -6,6 +6,8 @@
   --foreground: #f5edd8;
   --gold: #c8974a;
   --amber: #8b6914;
+  --teal: #0d9488;
+  --teal-light: #14b8a6;
 }
 
 @theme inline {
@@ -14,6 +16,8 @@
   --color-cream: var(--foreground);
   --color-gold: var(--gold);
   --color-amber: var(--amber);
+  --color-teal: var(--teal);
+  --color-teal-light: var(--teal-light);
   --font-sans: var(--font-inter);
   --font-display: var(--font-syne);
 }

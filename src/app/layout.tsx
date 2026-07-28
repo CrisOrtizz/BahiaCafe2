@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Syne } from "next/font/google";
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import { brand } from "@/data/site";
 import "@/styles/globals.css";
 
@@ -69,10 +66,7 @@ export default function RootLayout({
       className={`${inter.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-cream">
-        <CustomCursor />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
