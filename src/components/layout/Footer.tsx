@@ -92,6 +92,13 @@ export function Footer() {
         <p className="mt-12 text-xs tracking-wide text-cream/35">
           © {new Date().getFullYear()} {brand.name} · Líbano, Tolima, Colombia
         </p>
+
+        <Link
+          href="/login"
+          className="mt-3 text-xs text-cream/15 transition-colors duration-300 hover:text-cream/35"
+        >
+          {brand.name}
+        </Link>
       </Container>
     </footer>
   );
