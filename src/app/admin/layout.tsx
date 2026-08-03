@@ -14,23 +14,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           Bahía Café <span className="text-sm font-normal text-cream/50">Admin</span>
         </Link>
 
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-1.5 sm:gap-3">
           <Link
             href="/admin/gastos"
-            className="rounded-lg border border-amber/40 px-3 py-1.5 text-sm font-medium text-amber transition-colors hover:bg-amber/10"
+            className="rounded-lg border border-amber/40 px-2 py-1.5 text-xs font-medium text-amber transition-colors hover:bg-amber/10 sm:px-3 sm:text-sm"
           >
             + Gasto
           </Link>
           <Link
             href="/admin/nueva-venta"
-            className="rounded-lg bg-teal px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-teal-light"
+            className="rounded-lg bg-teal px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-teal-light sm:px-3 sm:text-sm"
           >
             + Venta
           </Link>
           <form action={logoutAction}>
             <button
               type="submit"
-              className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-cream/60 transition-colors hover:border-white/30 hover:text-cream"
+              className="rounded-lg border border-white/15 px-2 py-1.5 text-xs text-cream/60 transition-colors hover:border-white/30 hover:text-cream sm:px-3 sm:text-sm"
             >
               Salir
             </button>

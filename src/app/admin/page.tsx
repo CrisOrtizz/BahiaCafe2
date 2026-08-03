@@ -78,12 +78,13 @@ export default async function AdminDashboard() {
 
       {/* Tarjetas mes */}
       <div className="grid grid-cols-3 gap-3">
-        <StatCard label="Ingresos mes" value={fmt(ingresosMes)} accent="teal" />
-        <StatCard label="Gastos mes" value={fmt(gastosMes)} accent="amber" />
+        <StatCard label="Ingresos mes" value={fmt(ingresosMes)} accent="teal" compact />
+        <StatCard label="Gastos mes" value={fmt(gastosMes)} accent="amber" compact />
         <StatCard
           label="Balance neto"
           value={fmt(balanceNeto)}
           accent={balanceNeto >= 0 ? 'teal' : 'red'}
+          compact
         />
       </div>
 
@@ -198,10 +199,12 @@ function StatCard({
   label,
   value,
   accent = 'none',
+  compact = false,
 }: {
   label: string
   value: string
   accent?: 'teal' | 'amber' | 'red' | 'none'
+  compact?: boolean
 }) {
   const colors = {
     teal: 'text-teal-light',
@@ -210,9 +213,9 @@ function StatCard({
     none: 'text-cream',
   }
   return (
-    <div className="rounded-lg border border-white/8 bg-surface px-4 py-4">
+    <div className="rounded-lg border border-white/8 bg-surface px-3 py-3 sm:px-4 sm:py-4">
       <p className="mb-1 text-xs text-cream/50">{label}</p>
-      <p className={`truncate text-xl font-bold ${colors[accent]}`}>{value}</p>
+      <p className={`leading-tight font-bold ${compact ? 'text-sm sm:text-lg' : 'text-xl'} ${colors[accent]}`}>{value}</p>
     </div>
   )
 }
