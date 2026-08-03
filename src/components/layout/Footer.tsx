@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { brand, navigationLinks } from "@/data/site";
+
+const footerLinks = [
+  ...navigationLinks.slice(0, 2),
+  { href: "/login", label: "Admin", subtle: true },
+  ...navigationLinks.slice(2),
+];
 import { generateWhatsAppLink } from "@/lib/whatsapp";
 
 function InstagramIcon() {
@@ -57,15 +63,25 @@ export function Footer() {
           aria-label="Navegación del pie de página"
           className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm"
         >
-          {navigationLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-cream/60 transition-colors duration-300 hover:text-gold"
-            >
-              {link.label}
-            </a>
-          ))}
+          {footerLinks.map((link) =>
+            "subtle" in link && link.subtle ? (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-cream/30 transition-colors duration-300 hover:text-cream/60"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-cream/60 transition-colors duration-300 hover:text-gold"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="mt-10 flex items-center gap-6">
@@ -92,13 +108,6 @@ export function Footer() {
         <p className="mt-12 text-xs tracking-wide text-cream/35">
           © {new Date().getFullYear()} {brand.name} · Líbano, Tolima, Colombia
         </p>
-
-        <Link
-          href="/login"
-          className="mt-3 text-xs text-cream/15 transition-colors duration-300 hover:text-cream/35"
-        >
-          {brand.name}
-        </Link>
       </Container>
     </footer>
   );
