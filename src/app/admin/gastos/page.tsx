@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { GastoForm } from './GastoForm'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Gastos — Bahía Café' }
 
 const fmt = (n: number) =>

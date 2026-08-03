@@ -1,5 +1,6 @@
 import { LoginForm } from './LoginForm'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Acceso admin — Bahía Café', robots: 'noindex' }
 
 type Props = { searchParams: Promise<{ from?: string }> }

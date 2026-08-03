@@ -23,6 +23,8 @@ const METODOS: Record<string, string> = {
   no_especificado: '—',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const supabase = getSupabaseServer()
 

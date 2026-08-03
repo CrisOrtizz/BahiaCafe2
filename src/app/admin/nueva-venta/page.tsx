@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getSupabaseServer } from '@/lib/supabase/server'
 import { SaleForm } from './SaleForm'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Nueva venta — Bahía Café' }
 
 export default async function NuevaVentaPage() {
