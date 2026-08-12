@@ -58,18 +58,17 @@ export default async function AdminDashboard() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
 
-      {/* Alerta stock bajo */}
+      {/* Alerta stock bajo — enlace directo a /admin/stock */}
       {lowStock.length > 0 && (
-        <div className="rounded-lg border border-red-700/50 bg-red-900/20 px-4 py-3">
-          <p className="mb-1 text-sm font-semibold text-red-300">
-            Stock bajo — {lowStock.length} producto{lowStock.length > 1 ? 's' : ''}
+        <Link
+          href="/admin/stock"
+          className="block rounded-lg border border-red-700/50 bg-red-900/20 px-4 py-3 transition-colors hover:border-red-600/60"
+        >
+          <p className="mb-0.5 text-sm font-semibold text-red-300">
+            ⚠ Stock crítico — {lowStock.length} producto{lowStock.length > 1 ? 's' : ''}
           </p>
-          {lowStock.map((p) => (
-            <p key={`${p.nombre}-${p.presentacion}`} className="text-sm text-red-200/70">
-              {p.nombre} {p.presentacion} — {p.stock_actual} ud. (mín. {p.stock_minimo})
-            </p>
-          ))}
-        </div>
+          <p className="text-xs text-red-200/50">Ver detalles →</p>
+        </Link>
       )}
 
       {/* Tarjetas hoy */}
@@ -124,10 +123,22 @@ export default async function AdminDashboard() {
           + Venta
         </Link>
         <Link
+          href="/admin/compras"
+          className="flex items-center justify-center rounded-lg border border-gold/40 py-4 font-semibold text-gold transition-colors hover:bg-gold/10"
+        >
+          + Compra
+        </Link>
+        <Link
           href="/admin/gastos"
           className="flex items-center justify-center rounded-lg border border-amber/40 py-4 font-semibold text-amber transition-colors hover:bg-amber/10"
         >
           + Gasto
+        </Link>
+        <Link
+          href="/admin/stock"
+          className="flex items-center justify-center rounded-lg border border-white/15 py-4 font-semibold text-cream/70 transition-colors hover:border-white/30 hover:text-cream"
+        >
+          Stock
         </Link>
       </div>
 
