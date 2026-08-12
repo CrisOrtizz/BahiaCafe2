@@ -14,7 +14,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           Bahía Café <span className="text-sm font-normal text-cream/50">Admin</span>
         </Link>
 
-        <nav className="flex items-center gap-1.5 sm:gap-3">
+        <nav className="flex items-center gap-1 sm:gap-3">
+          <Link
+            href="/admin/compras"
+            className="rounded-lg border border-gold/40 px-2 py-1.5 text-xs font-medium text-gold transition-colors hover:bg-gold/10 sm:px-3 sm:text-sm"
+          >
+            + Compra
+          </Link>
           <Link
             href="/admin/gastos"
             className="rounded-lg border border-amber/40 px-2 py-1.5 text-xs font-medium text-amber transition-colors hover:bg-amber/10 sm:px-3 sm:text-sm"
