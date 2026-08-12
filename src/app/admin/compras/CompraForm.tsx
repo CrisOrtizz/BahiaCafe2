@@ -80,8 +80,8 @@ export function CompraForm({ productos }: { productos: Producto[] }) {
     setSuccessId('')
     startTransition(async () => {
       const result = await registrarCompra(items, envio, categoria, fecha, notas || null)
-      if ('error' in result) {
-        setError(result.error)
+      if (!result || 'error' in result) {
+        setError(result?.error ?? 'Error desconocido')
       } else {
         setSuccessId(result.compraId)
         setItems([])
